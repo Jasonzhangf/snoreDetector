@@ -35,3 +35,11 @@
 - ESP 录音核心固件构建已验证：`idf.py build` 实际编译 `recorder/recorder_core.cc.obj` 并成功生成 `build/xiaozhi.bin`；binary size `0x2a93b0`，smallest app partition `0x3f0000`，free `0x146c50`（32%）。
 - ESP 时间同步 contract 真源：`docs/snore-recorder/esp-time-sync-contract.md`。Wi-Fi connected 后进入 `TIME_SYNCING`，SNTP 成功且 UTC 年 >=2025 才进入 `STANDBY`；MVP 阻止未校时录制；segment wall time 用 RFC3339 UTC，duration/chunk offset 用 `esp_timer` 单调时间；禁止 fallback 到 OTA time、Mac receive time、build time。
 - ESP 显示布局 contract 真源：`docs/snore-recorder/esp-display-layout-contract.md`；已确认静态 mockup `docs/snore-recorder/display-mockup.html`。240x240 UI 分 top/main/bottom 三块，对象预算 <=20，音频柱 8 根，动画 <=10Hz，时钟/elapsed 1Hz，避免聊天气泡、GIF、动态创建 LVGL 对象。
+
+## Repository Baseline
+
+- Git upstream: `https://github.com/Jasonzhangf/snoreDetector.git`.
+- Local branch: `main`, tracking `origin/main`.
+- Initial pushed commit: `4f60ade feat: initialize snore detector firmware`.
+- Commit hygiene baseline: do not commit `build/`, `build.*`, `build.stale-*`, `managed_components/`, `releases/`, `recordings/`, `sdkconfig`, `dependencies.lock`, generated `lang_config.h`, `.DS_Store`, `__pycache__/`, `*.pyc`, `*.bin`, `*.elf`, `*.map`, or `*.zip`.
+- Pre-push verification used for the baseline: host recorder core test passed, Python snore server py_compile passed, clean `idf.py build` passed for ESP32-S3 and generated `build/xiaozhi.bin`, then build artifacts were removed before commit.

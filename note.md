@@ -23,3 +23,6 @@
 - L2 Slice 2 录音核心纯逻辑已实现到 `main/recorder/recorder_core.h` 和 `main/recorder/recorder_core.cc`，并接入 `main/CMakeLists.txt`。当前只包含 `LevelDetector`、`TriggerState`、`PreRollBuffer`，不含 Wi-Fi/LVGL/HTTP/AudioService 绑定。
 - Slice 2 host 测试已落到 `tools/snore_recorder_tests/recorder_core_test.cc`。验证命令：`c++ -std=c++17 -Wall -Wextra -Werror -I main main/recorder/recorder_core.cc tools/snore_recorder_tests/recorder_core_test.cc -o /tmp/xiaozhi-snore-tests/recorder_core_test && /tmp/xiaozhi-snore-tests/recorder_core_test`，结果 `recorder_core_test passed`。
 - Slice 2 固件构建验证：ESP-IDF `5.5` 环境下运行 `idf.py build`，Ninja 实际编译 `recorder/recorder_core.cc.obj` 并成功生成 `build/xiaozhi.bin`；binary size `0x2a93b0`，smallest app partition `0x3f0000`，free `0x146c50`（32%）。
+- Git 上游已初始化为 `https://github.com/Jasonzhangf/snoreDetector.git`，本地分支 `main` 跟踪 `origin/main`。初始提交 `4f60ade feat: initialize snore detector firmware` 已推送。
+- 提交前清理了明确生成物：`build/`、`build.stale-20260709-195026/`、`releases/`、`.DS_Store`、Python `__pycache__`。`.gitignore` 已覆盖 `build/`、`build.*`、`build.stale-*`、`managed_components/`、`releases/`、`recordings/`、`sdkconfig`、`dependencies.lock`、`.DS_Store`、`__pycache__/`、`*.pyc`、`*.bin`、`*.elf`、`*.map`、`*.zip` 等。
+- 提交前验证：host recorder core test 通过；Python server py_compile 通过；干净 `idf.py build` 通过并生成 `build/xiaozhi.bin`，随后删除 build 产物；远端推送成功。
