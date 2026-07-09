@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ESP Snore Recorder Display Mockup</title>
+  <style>
+    :root {
+      --page-bg: #e8e1d4;
+      --ink: #1f2522;
+      --muted: #6f736b;
+      --screen-bg: #07110f;
+      --screen-panel: #0d1c18;
+      --screen-line: #1d3a33;
+      --green: #52f2aa;
+      --amber: #ffc857;
+      --red: #ff5e57;
+      --blue: #7bdff2;
+      --cream: #f7f1df;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(82, 242, 170, 0.22), transparent 28%),
+        radial-gradient(circle at 88% 18%, rgba(255, 200, 87, 0.28), transparent 30%),
+        linear-gradient(135deg, #ede5d7 0%, var(--page-bg) 52%, #d6c9b8 100%);
+      font-family: "Avenir Next", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    }
+
+    main {
+      width: min(1120px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 32px 0 48px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: flex-end;
+      margin-bottom: 26px;
+      border-bottom: 2px solid rgba(31, 37, 34, 0.16);
+      padding-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 52px);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+    }
+
+    .subtitle {
+      max-width: 420px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+      align-items: start;
+    }
+
+    .card {
+      padding: 16px;
+      border: 1px solid rgba(31, 37, 34, 0.16);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.36);
+      box-shadow: 0 18px 50px rgba(43, 37, 29, 0.14);
+    }
+
+    .label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .label strong {
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .screen {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 24px;
+      color: var(--cream);
+      background:
+        radial-gradient(circle at 50% 32%, rgba(82, 242, 170, 0.16), transparent 38%),
+        linear-gradient(180deg, #0b1916 0%, var(--screen-bg) 100%);
+      border: 8px solid #171b18;
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+        inset 0 -24px 48px rgba(0, 0, 0, 0.36),
+        0 12px 28px rgba(0, 0, 0, 0.22);
+    }
+
+    .topbar,
+    .bottombar {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: rgba(247, 241, 223, 0.82);
+      background: rgba(7, 17, 15, 0.48);
+      backdrop-filter: blur(6px);
+    }
+
+    .topbar {
+      top: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .bottombar {
+      bottom: 0;
+      justify-content: center;
+      gap: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 12px;
+    }
+
+    .wifi,
+    .battery {
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .center {
+      position: absolute;
+      inset: 34px 12px 34px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .time {
+      font-size: 34px;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      font-weight: 800;
+    }
+
+    .status {
+      margin-top: 10px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      color: #07110f;
+      background: var(--green);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .hint {
+      margin-top: 9px;
+      color: rgba(247, 241, 223, 0.68);
+      font-size: 12px;
+    }
+
+    .bars {
+      height: 92px;
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+
+    .bar {
+      width: 10px;
+      min-height: 6px;
+      border-radius: 8px 8px 2px 2px;
+      background: linear-gradient(180deg, var(--green), #1a9f75);
+      box-shadow: 0 0 16px rgba(82, 242, 170, 0.28);
+    }
+
+    .bar.amber {
+      background: linear-gradient(180deg, var(--amber), #b87916);
+      box-shadow: 0 0 16px rgba(255, 200, 87, 0.25);
+    }
+
+    .record-dot {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 16px rgba(255, 94, 87, 0.8);
+      margin-right: 6px;
+    }
+
+    .meter {
+      width: 156px;
+      height: 10px;
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .meter span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--green), var(--amber));
+    }
+
+    .error .status {
+      color: #fff;
+      background: var(--red);
+    }
+
+    .sync .status {
+      background: var(--blue);
+    }
+
+    .small {
+      font-size: 12px;
+      color: rgba(247, 241, 223, 0.68);
+      line-height: 1.45;
+    }
+
+    @media (max-width: 640px) {
+      header {
+        display: block;
+      }
+
+      .subtitle {
+        margin-top: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>240×240<br>录音屏幕草图</h1>
+      <p class="subtitle">静态示意图。目标是在小屏上只保留时间、状态、音频能量、阈值和错误，不复用聊天气泡。</p>
+    </header>
+
+    <section class="grid">
+      <article class="card">
+        <div class="label"><strong>待机</strong><span>STANDBY</span></div>
+        <div class="screen">
+          <div class="topbar"><span class="wifi">Wi-Fi</span><span>7月9日</span><span class="battery">82%</span></div>
+          <div class="center">
+            <div class="time">02:13</div>
+            <div class="status">待机</div>
+            <div class="hint">音量+ 开始监听</div>
+          </div>
+          <div class="bottombar">灵敏度: 中 -40dBFS</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="label"><strong>校时</strong><span>TIME_SYNCING</span></div>
+        <div class="screen sync">
+          <div class="topbar"><span class="wifi">Wi-Fi</span><span>联网</span><span class="battery">82%</span></div>
+          <div class="center">
+            <div class="time">--:--</div>
+            <div class="status">校时中</div>
+            <div class="hint">SNTP 获取互联网时间</div>
+            <div class="meter"><span style="width: 62%"></span></div>
+          </div>
+          <div class="bottombar">未校时不允许录制</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="label"><strong>监听</strong><span>MONITORING</span></div>
+        <div class="screen">
+          <div class="topbar"><span class="wifi">Wi-Fi</span><span>02:14:08</span><span class="battery">81%</span></div>
+          <div class="center">
+            <div class="bars" aria-label="音量动画">
+              <span class="bar" style="height: 18px"></span>
+              <span class="bar" style="height: 34px"></span>
+              <span class="bar" style="height: 26px"></span>
+              <span class="bar" style="height: 58px"></span>
+              <span class="bar amber" style="height: 72px"></span>
+              <span class="bar" style="height: 48px"></span>
+              <span class="bar" style="height: 28px"></span>
+              <span class="bar" style="height: 16px"></span>
+            </div>
+            <div class="status">监听中</div>
+            <div class="hint">当前 -43dBFS</div>
+          </div>
+          <div class="bottombar">超过 -40dBFS 持续 0.5s 录制</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="label"><strong>录制</strong><span>RECORDING</span></div>
+        <div class="screen">
+          <div class="topbar"><span class="wifi">Wi-Fi</span><span>02:14:19</span><span class="battery">81%</span></div>
+          <div class="center">
+            <div class="bars">
+              <span class="bar amber" style="height: 46px"></span>
+              <span class="bar amber" style="height: 62px"></span>
+              <span class="bar amber" style="height: 84px"></span>
+              <span class="bar amber" style="height: 70px"></span>
+              <span class="bar amber" style="height: 88px"></span>
+              <span class="bar amber" style="height: 54px"></span>
+            </div>
+            <div class="status"><span class="record-dot"></span>录制中 00:12</div>
+            <div class="hint">上传到 Mac · seq 128</div>
+          </div>
+          <div class="bottombar">静音 3s 自动结束</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="label"><strong>阈值切换</strong><span>VOLUME-</span></div>
+        <div class="screen">
+          <div class="topbar"><span class="wifi">Wi-Fi</span><span>02:15:01</span><span class="battery">80%</span></div>
+          <div class="center">
+            <div class="time">高</div>
+            <div class="status">灵敏度</div>
+            <div class="hint">-45dBFS · 更容易触发</div>
+          </div>
+          <div class="bottombar">超高 → 高 → 中 → 低</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="label"><strong>错误</strong><span>ERROR</span></div>
+        <div class="screen error">
+          <div class="topbar"><span>Wi-Fi</span><span>02:18:44</span><span class="battery">79%</span></div>
+          <div class="center">
+            <div class="time">!</div>
+            <div class="status">上传失败</div>
+            <div class="hint small">Mac 服务不可达<br>本段不能声明保存成功</div>
+          </div>
+          <div class="bottombar">音量+ 返回待机</div>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
